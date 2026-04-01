@@ -1,12 +1,13 @@
 """
 ML1 Fruits-360 assignment driver.
 
-Requires: clone https://github.com/Horea94/Fruit-Images-Dataset into data/Fruit-Images-Dataset
+Requires: Fruits-360 from Kaggle (moltean/fruits) — see data/README.txt and fetch_dataset.py
 
 Example:
-  python main.py --all
-  python main.py --section bovw
-  python main.py --section svm cnn alexnet
+  py main.py --all
+  py main.py --section all
+  py main.py --section bovw
+  py main.py --section svm cnn alexnet
 """
 from __future__ import annotations
 
@@ -14,11 +15,12 @@ import argparse
 import json
 from pathlib import Path
 
-from alexnet_transfer import run_alexnet_sections
 from bovw import run_bovw_and_pca
-from cnn_train import run_cnn_section
 from config import OUTPUT_DIR, ensure_output_dir
 from svm_bovw import run_svm_bovw
+
+# TensorFlow (cnn_train) and heavy torch imports are loaded only when needed so
+# `main.py --section bovw svm alexnet` works on Python 3.14 without TensorFlow.
 
 
 def _write_assignment_summary(
@@ -51,6 +53,11 @@ def _write_assignment_summary(
 def main() -> None:
     parser = argparse.ArgumentParser(description="Fruit-360 ML1 assignment pipeline")
     parser.add_argument(
+        "--all",
+        action="store_true",
+        help="Run all sections (bovw, svm, cnn, alexnet). Same idea as --section all.",
+    )
+    parser.add_argument(
         "--section",
         nargs="+",
         choices=["bovw", "svm", "cnn", "alexnet", "all"],
@@ -58,9 +65,12 @@ def main() -> None:
         help="Which parts to run (default: all)",
     )
     args = parser.parse_args()
-    sections = set(args.section)
-    if "all" in sections:
+    if args.all:
         sections = {"bovw", "svm", "cnn", "alexnet"}
+    else:
+        sections = set(args.section)
+        if "all" in sections:
+            sections = {"bovw", "svm", "cnn", "alexnet"}
 
     need_bovw = "bovw" in sections
     need_svm = "svm" in sections
@@ -81,11 +91,23 @@ def main() -> None:
 
     cnn_pack = None
     if need_cnn:
+        try:
+            from cnn_train import run_cnn_section
+        except ModuleNotFoundError as e:
+            if e.name in ("tensorflow", "keras"):
+                raise SystemExit(
+                    "CNN requires TensorFlow. Install Python 3.10–3.12, then:\n"
+                    "  py -m pip install tensorflow\n"
+                    "Or run without CNN:  py main.py --section bovw svm alexnet"
+                ) from e
+            raise
         best_svm = float(svm_pack["best_kernel_info"]["test_error"]) if svm_pack else None
         cnn_pack = run_cnn_section(svm_best_test_error=best_svm)
 
     alex_pack = None
     if need_alex:
+        from alexnet_transfer import run_alexnet_sections
+
         if svm_pack is None:
             if bovw_dict is None:
                 bovw_dict = run_bovw_and_pca()

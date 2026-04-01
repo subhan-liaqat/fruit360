@@ -37,9 +37,17 @@ def load_split_paths(
     test_paths: list[Path] = []
     test_labels: list[int] = []
 
+    missing_train: list[str] = []
+    missing_test: list[str] = []
     for short, folder_name in CLASS_FOLDER_BY_SHORT_NAME.items():
         tr_dir = TRAINING_DIR / folder_name
         te_dir = TEST_DIR / folder_name
+        if not tr_dir.is_dir():
+            missing_train.append(folder_name)
+            continue
+        if not te_dir.is_dir():
+            missing_test.append(folder_name)
+            continue
         tr_imgs = list_images(tr_dir)
         te_imgs = list_images(te_dir)
         if len(tr_imgs) < min_train_images:
@@ -54,6 +62,20 @@ def load_split_paths(
         test_paths.extend(te_imgs)
         test_labels.extend([idx] * len(te_imgs))
 
+    if missing_train or missing_test:
+        msg = [
+            "Dataset class folders do not match config.CLASS_FOLDER_BY_SHORT_NAME.",
+            f"Dataset root: {TRAINING_DIR.parent}",
+        ]
+        if missing_train:
+            msg.append("Missing in Training: " + ", ".join(sorted(missing_train)))
+        if missing_test:
+            msg.append("Missing in Test: " + ", ".join(sorted(missing_test)))
+        msg.append(
+            "Your current Kaggle variant appears to use different class names and may not include all assigned classes."
+        )
+        raise FileNotFoundError("\n".join(msg))
+
     return (
         train_paths,
         np.array(train_labels, dtype=np.int64),
@@ -66,8 +88,8 @@ def load_split_paths(
 def assert_data_ready() -> None:
     if not TRAINING_DIR.is_dir() or not TEST_DIR.is_dir():
         raise FileNotFoundError(
-            f"Expected dataset at {TRAINING_DIR.parent}. "
-            "Clone https://github.com/Horea94/Fruit-Images-Dataset into data/Fruit-Images-Dataset"
+            f"Expected dataset at {TRAINING_DIR.parent} with Training/ and Test/. "
+            "Download from Kaggle (moltean/fruits); see data/README.txt or run fetch_dataset.py"
         )
 
 

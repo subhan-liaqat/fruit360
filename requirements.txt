@@ -1,3 +1,4 @@
+
 # TensorFlow/Keras (CNN, Section 4): use Python 3.10–3.12; no official wheels for 3.14+ yet.
 tensorflow>=2.15.0; python_version < "3.13"
 numpy>=1.24.0,<3
@@ -7,3 +8,4 @@ opencv-contrib-python>=4.8.0
 torch>=2.1.0
 torchvision>=0.16.0
 Pillow>=10.0.0
+kaggle>=1.5.12
