@@ -1,0 +1,51 @@
+# Track only Training/Test images for the 10 assignment classes (~250 MB).
+# Omit Kaggle extras at this level (LICENSE, README, Papers/, etc.).
+
+/*
+!Training/
+!Test/
+!.gitignore
+
+Training/**
+!Training/apple_crimson_snow_1/
+!Training/apple_crimson_snow_1/**
+!Training/apple_golden_1/
+!Training/apple_golden_1/**
+!Training/apple_red_delicios_1/
+!Training/apple_red_delicios_1/**
+!Training/Grape pink 2/
+!Training/Grape pink 2/**
+!Training/Peach 3/
+!Training/Peach 3/**
+!Training/Onion Red 2/
+!Training/Onion Red 2/**
+!Training/Cherry 3/
+!Training/Cherry 3/**
+!Training/Orange 2/
+!Training/Orange 2/**
+!Training/Papaya 2/
+!Training/Papaya 2/**
+!Training/Plum 5/
+!Training/Plum 5/**
+
+Test/**
+!Test/apple_crimson_snow_1/
+!Test/apple_crimson_snow_1/**
+!Test/apple_golden_1/
+!Test/apple_golden_1/**
+!Test/apple_red_delicios_1/
+!Test/apple_red_delicios_1/**
+!Test/Grape pink 2/
+!Test/Grape pink 2/**
+!Test/Peach 3/
+!Test/Peach 3/**
+!Test/Onion Red 2/
+!Test/Onion Red 2/**
+!Test/Cherry 3/
+!Test/Cherry 3/**
+!Test/Orange 2/
+!Test/Orange 2/**
+!Test/Papaya 2/
+!Test/Papaya 2/**
+!Test/Plum 5/
+!Test/Plum 5/**
