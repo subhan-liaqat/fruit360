@@ -1,9 +1,6 @@
 Fruits-360 data (Kaggle)
 ========================
 
-This GitHub repo includes image files only for the 10 assignment class folders
-(Training + Test). For the full 131-class dataset, download from Kaggle (link below).
-
 Run the assignment from:  ML1_Fruit360_Assignment.ipynb  (project root).
 
 Dataset page:

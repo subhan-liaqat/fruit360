@@ -1,8 +1,7 @@
-# Dataset: README + optional .gitkeep + Fruit-Images-Dataset (subset only; see data/Fruit-Images-Dataset/.gitignore)
+# Dataset files (large) — keep data/README.txt and data/.gitkeep in git
 data/*
 !data/README.txt
 !data/.gitkeep
-!data/Fruit-Images-Dataset/
 
 outputs/
 __pycache__/
